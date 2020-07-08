@@ -4,7 +4,7 @@ public class Login { //登陆实例
     private int lid;
     private String logName;
     private String logPwd;
-    private int isLogin;
+    private boolean isLogin;
     private int state;
 
     public int getLid() {
@@ -31,11 +31,11 @@ public class Login { //登陆实例
         this.logPwd = logPwd;
     }
 
-    public int getIsLogin() {
+    public boolean getIsLogin() {
         return isLogin;
     }
 
-    public void setIsLogin(int isLogin) {
+    public void setIsLogin(boolean isLogin) {
         this.isLogin = isLogin;
     }
 

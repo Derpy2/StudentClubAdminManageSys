@@ -1,19 +1,26 @@
 package App;
 
+import com.sun.javaws.util.JfxHelper;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class StudentDBSFrom extends JFrame{
-    private JPanel panel1;
-    private JButton button1;
-    private JButton button2;
+public class StudentDBSFrom{
+    private JPanel panel1 = new JPanel();
+    private JFormattedTextField formattedTextField1;
+    private JButton button1 = new JButton();
+    private JButton button2 = new JButton();
 
-    public StudentDBSFrom(String title){
-        super(title);
-        this.add(panel1);
-        this.add(button1);
-        createUIComponents();
-        this.setVisible(true);
+
+    public StudentDBSFrom() {
+        button1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
     }
 
     private void createUIComponents() {
@@ -22,8 +29,12 @@ public class StudentDBSFrom extends JFrame{
         button2.setSize(dim1);
     }
 
-    public static void main(){
-        StudentDBSFrom ctnp = new StudentDBSFrom("学生社团管理系统");
+    public static void main(String[] args){
+        JFrame ctnp = new JFrame("社团管理系统");
 
+        ctnp.setContentPane(new StudentDBSFrom().panel1);
+        ctnp.setSize(400,400);
+        ctnp.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        ctnp.setVisible(true);
     }
 }

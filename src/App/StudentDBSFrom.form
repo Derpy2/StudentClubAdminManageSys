@@ -22,14 +22,7 @@
         </constraints>
         <properties/>
         <border type="none"/>
-        <children>
-          <component id="1181f" class="javax.swing.JButton" binding="button1" default-binding="true">
-            <constraints/>
-            <properties>
-              <text value="Button"/>
-            </properties>
-          </component>
-        </children>
+        <children/>
       </toolbar>
       <scrollpane id="ceddd">
         <constraints>
@@ -38,11 +31,9 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="777a7" class="javax.swing.JButton" binding="button2" custom-create="true" default-binding="true">
+          <component id="dda5e" class="javax.swing.JFormattedTextField" binding="formattedTextField1" default-binding="true">
             <constraints/>
-            <properties>
-              <text value="Button"/>
-            </properties>
+            <properties/>
           </component>
         </children>
       </scrollpane>
