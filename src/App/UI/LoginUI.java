@@ -27,7 +27,7 @@ public class LoginUI extends JDialog{
      * 下方有登陆按钮和注册按钮
      */
     LoginUI(){
-        this.setTitle("登陆");
+        this.setTitle("\u767b\u9646");
         setBounds(100,100, 400, 300);
         getContentPane().setLayout(new BorderLayout());
         loginPanel.setBorder(new EmptyBorder(10,10,10,10));
@@ -77,22 +77,27 @@ public class LoginUI extends JDialog{
         buttonPanel.add(loginIn);
 
 
-        signUp.setText("\u6ce8\u518c");
+        signUp.setText("\u6ce8\u518c");//注册
         signUp.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                SignUpUI signUpUI = new SignUpUI();
+
+                signUpUI.setModal(true);
+                signUpUI.setLocationRelativeTo(getContentPane());
+                signUpUI.setVisible(true);
 
             }
         });
         buttonPanel.add(signUp);
-
-
     }
 
     public User getUser(){
         return user;
     }
-
+    private void loginUIDisModal(){
+        this.setModal(false);
+    }
     private void loginUIDispose(){
         this.dispose();
     }

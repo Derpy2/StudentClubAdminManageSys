@@ -18,6 +18,16 @@ public class User { //用户实例
         this.password = password;
     }
 
+    public User(String userName, String password, String name, String sex, String phone, String email) {
+        this.name = name;
+        this.sex = sex;
+        this.phone = phone;
+        this.email = email;
+        this.userName = userName;
+        this.password = password;
+    }
+
+
     public User(String uid, String name, String sex, String cid, String phone, String email, String userName, String password) {
         this.uid = uid;
         this.name = name;
