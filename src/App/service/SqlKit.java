@@ -3,7 +3,17 @@ package App.service;
 import App.entity.*;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.sql.*;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Vector;
 
 
 public class SqlKit extends ConnectDB{
@@ -156,5 +166,63 @@ public class SqlKit extends ConnectDB{
             }
             this.closeConnection();
         }
+    }
+
+
+    /**
+     * 查询显示全部社团
+     */
+    public DefaultTableModel searchClub(){
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String sql = "select cid, cName, uid, (select uName from cUser where cUser.uid = cClub.uid) as 'cLeaderName', cTime from cClub";
+        conn = this.getConnection();
+        DefaultTableModel res = null;
+
+        try{
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            Vector<Object> columns = new Vector<Object>();
+            columns.add("社团编号");
+            columns.add("社团名称");
+            columns.add("社团团长ID");
+            columns.add("团长姓名");
+            columns.add("社团建立时间");
+            res = new DefaultTableModel(columns, 0);
+            while(rs.next()){
+                Object cid = rs.getString("cid");
+                Object cName = rs.getString("cName");
+                Object uid = rs.getString("uid");
+                Object cLeaderName = rs.getString("cLeaderName");
+                Object cTime = rs.getString("cTime");
+
+                Vector<Object> row = new Vector<Object>();
+                row.add(cid);
+                row.add(cName);
+                row.add(uid);
+                row.add(cLeaderName);
+                row.add(cTime);
+                res.addRow(row);
+            }
+
+        }catch (SQLException e){
+            System.out.println("searchClub1: " + e.getMessage());
+        }finally {
+            try{
+                rs.close();
+                ps.close();
+            }catch (SQLException e){
+                System.out.println("searchClub2: " + e.getMessage());
+            }
+            this.closeConnection();
+        }
+        return res;
+    }
+
+    public static void main(String[] args){
+        SqlKit tmp = new SqlKit();
+        DefaultTableModel tmpmodel = tmp.searchClub();
+        System.out.println(tmpmodel);
     }
 }

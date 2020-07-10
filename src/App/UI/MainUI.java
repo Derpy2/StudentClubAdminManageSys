@@ -5,6 +5,9 @@ import java.awt.*;
 import java.awt.event.*;
 import App.entity.User;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
+import App.service.SqlKit;
 import com.sun.xml.internal.messaging.saaj.soap.JpegDataContentHandler;
 
 public class MainUI {
@@ -36,11 +39,7 @@ public class MainUI {
     private static JTextField userInfoPhoneT = new JTextField();
     private static JButton modify = new JButton();
 
-    private JPanel searchQueryPanel = new JPanel();//用户查询界面
-    private JPanel searchQueryPanelButton = new JPanel();//用户查询按钮界面
-    private JButton searchButton = new JButton();//查询按钮
-    private JScrollPane searchScrollPane = new JScrollPane();//查询结果显示界面
-    private JPanel searchQueryPanelShow = new JPanel();//用户查询结果显示界面
+
 
 
     private JPanel verifyPanel = new JPanel();//用户审核界面
@@ -94,8 +93,7 @@ public class MainUI {
 
         frame.add(tabbedPane);
 
-
-//        tabbedPane.add("查询信息", searchQueryPanel);
+        loadSearchTab();
 //        tabbedPane.add("申请审核", verifyPanel);
 //        tabbedPane.add("用户申请",applyPanel);
 
@@ -106,11 +104,72 @@ public class MainUI {
         loingState = loingStateate;
         user = tmpuser;
         loadUserInfoTab();
+
         System.out.println("登陆状态：" + loingState);
     }
+    private static JPanel searchQueryPanel = new JPanel();//用户查询界面
+    private static JPanel searchQueryPanelButton = new JPanel();//用户查询按钮界面
+    private static JButton searchClubButton = new JButton();//社团查询按钮
+    private static JButton searchUserButton = new JButton();//用户查询按钮
+    private static JButton searchActivityButton = new JButton();//活动查询按钮
+    private static JLabel searchClubLabel = new JLabel();//社团名称
+    private static JTextField searchClubText = new JTextField();//社团模糊查询文本框
+    private static JScrollPane searchScrollPane = new JScrollPane();//查询结果显示界面
 
-    private void loadSearchTab(){
+    private static JTable resultTable = new JTable();//显示表格
+    private static DefaultTableModel model1 = new DefaultTableModel();
 
+    private static void loadSearchTab(){
+        tabbedPane.add("查询信息", searchQueryPanel);
+        /*
+        searchQueryPanel.setLayout(new BorderLayout());
+
+        searchQueryPanel.add(searchQueryPanelButton, BorderLayout.NORTH);
+        //searchQueryPanelButton.setLayout(null);
+        searchQueryPanelButton.setBorder(new EmptyBorder(0,0,0,0));
+
+
+        //resultTable.setRowHeight(30);
+        //searchQueryPanel.add(searchScrollPane);
+
+        searchQueryPanel.add(searchScrollPane, BorderLayout.CENTER);
+
+        //searchQueryPanel.add(searchScrollPane);
+        //searchScrollPane.setBorder(new EmptyBorder(100,0,0,0));
+        */
+        searchQueryPanel.setLayout(null);
+        //searchQueryPanel.setBounds(0,0,200,100);
+        searchQueryPanel.add(searchQueryPanelButton);
+        searchQueryPanelButton.setLayout(null);
+        searchQueryPanelButton.setBounds(0,0,800,90);
+        searchQueryPanel.add(searchScrollPane);
+        searchScrollPane.setBounds(0,100,800,300);
+
+
+
+
+        searchClubButton.setText("社团查询");
+        searchQueryPanelButton.add(searchClubButton);
+        searchClubButton.setBounds(0,0,100,28);
+        searchClubButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                model1 = new SqlKit().searchClub();
+                resultTable.setModel(model1);
+                searchScrollPane.add(resultTable);
+                searchScrollPane.setViewportView(resultTable);
+            }
+        });
+
+        searchActivityButton.setText("活动查询");
+        searchActivityButton.setBounds(110,0,100,28);
+        searchQueryPanelButton.add(searchActivityButton);
+        searchActivityButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
 
 
     }
