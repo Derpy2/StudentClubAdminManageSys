@@ -1,12 +1,12 @@
 package App.UI;
 
-import App.entity.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
 import App.service.userLoginCheck;
 import App.entity.User;
+import App.UI.MainUI;
 
 
 public class LoginUI extends JDialog{
@@ -18,8 +18,8 @@ public class LoginUI extends JDialog{
     private JPanel buttonPanel = new JPanel();
     private JButton loginIn = new JButton();
     private JButton signUp = new JButton();
-    private int isLogin = 0;
-    private User user = null;
+    public int isLogin = 0;
+    public User user = new User();
 
     /**
      * 登陆UI
@@ -64,6 +64,8 @@ public class LoginUI extends JDialog{
                     tmpUser.setState(1);
                     tmpUser = new userLoginCheck().getUserInfo(tmpUser);
                     user = tmpUser;
+                    isLogin = 1;
+                    MainUI.setLoingState(isLogin, tmpUser);
                     JOptionPane.showMessageDialog(null, "登陆成功");
                     loginUIDispose();
                 }else{
@@ -82,11 +84,9 @@ public class LoginUI extends JDialog{
             @Override
             public void actionPerformed(ActionEvent e) {
                 SignUpUI signUpUI = new SignUpUI();
-
                 signUpUI.setModal(true);
                 signUpUI.setLocationRelativeTo(getContentPane());
                 signUpUI.setVisible(true);
-
             }
         });
         buttonPanel.add(signUp);

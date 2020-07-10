@@ -45,10 +45,17 @@ public class userLoginCheck extends ConnectDB{
             ps.setString(2, user.getPassword());
             rs = ps.executeQuery();
             if(rs.next()){
-                tmp.setUid(rs.getString(0));
-                tmp.setSex(rs.getString(1));
-                tmp.setName(rs.getString(2));
-                tmp.setEmail(rs.getString(5));
+                tmp.setUid(rs.getString(1));
+                tmp.setSex(rs.getString(2));
+                tmp.setName(rs.getString(3));
+
+                tmp.setUserName(rs.getString(4));
+                tmp.setPassword(rs.getString(5));
+                tmp.setEmail(rs.getString(6));
+                tmp.setPhone(rs.getString(7));
+                tmp.setCid(rs.getString(8));
+
+                //tmp.setEmail(rs.getString(4));
             }
         }catch (SQLException e){
             e.printStackTrace();

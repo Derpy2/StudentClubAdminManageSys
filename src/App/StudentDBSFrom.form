@@ -22,7 +22,14 @@
         </constraints>
         <properties/>
         <border type="none"/>
-        <children/>
+        <children>
+          <scrollpane id="326b3">
+            <constraints/>
+            <properties/>
+            <border type="none"/>
+            <children/>
+          </scrollpane>
+        </children>
       </toolbar>
       <scrollpane id="ceddd">
         <constraints>
@@ -30,12 +37,7 @@
         </constraints>
         <properties/>
         <border type="none"/>
-        <children>
-          <component id="dda5e" class="javax.swing.JFormattedTextField" binding="formattedTextField1" default-binding="true">
-            <constraints/>
-            <properties/>
-          </component>
-        </children>
+        <children/>
       </scrollpane>
     </children>
   </grid>

@@ -36,7 +36,7 @@ public class inputCheck {
 
         if(user.getPhone().length() != 0 && user.getPhone().length() != 11){
             System.out.println(user.getPhone());
-            System.out.println("手机长度不对");
+            System.out.println("手机长度不对" + user.getPhone());
             return false;
         }
 

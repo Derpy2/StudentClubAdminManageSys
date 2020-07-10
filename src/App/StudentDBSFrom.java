@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 
 public class StudentDBSFrom{
     private JPanel panel1 = new JPanel();
-    private JFormattedTextField formattedTextField1;
     private JButton button1 = new JButton();
     private JButton button2 = new JButton();
 
