@@ -172,10 +172,13 @@ public class SqlKit extends ConnectDB{
     /**
      * 查询显示全部社团
      */
-    public DefaultTableModel searchClub(){
+    public DefaultTableModel searchClub(String clubName){
         PreparedStatement ps = null;
         ResultSet rs = null;
         String sql = "select cid, cName, uid, (select uName from cUser where cUser.uid = cClub.uid) as 'cLeaderName', cTime from cClub";
+        if(!clubName.equals("")){
+            sql += " where cName like '%" + clubName + "%'";
+        }
         conn = this.getConnection();
         DefaultTableModel res = null;
 
@@ -220,9 +223,73 @@ public class SqlKit extends ConnectDB{
         return res;
     }
 
+
+    public DefaultTableModel searchActivity(String aName){
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String sql = "select aid, aPlace, aContent, aPNum, aRigEndTime, aStartTime, aStatus, (select cName from cClub where cClub.cid = cActivity.cid) as 'cName', aReason from cActivity";
+        if(!aName.equals("")){
+            sql += " where aContent like '%" + aName + "%'";
+        }
+        conn = this.getConnection();
+        DefaultTableModel res = null;
+
+        try{
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            Vector<Object> columns = new Vector<Object>();
+            columns.add("活动编号");
+            columns.add("活动地点名称");
+            columns.add("活动名称");
+            columns.add("活动人数");
+            columns.add("活动报名截止日期");
+            columns.add("活动开始时间");
+            columns.add("活动审核状态");
+            columns.add("活动社团名");
+            columns.add("申请理由");
+            res = new DefaultTableModel(columns, 0);
+            while(rs.next()){
+                Object aid = rs.getString("aid");
+                Object aPlace = rs.getString("aPlace");
+                Object aContent = rs.getString("aContent");
+                Object aPNum = rs.getString("aPNum");
+                Object aRigEndTime = rs.getString("aRigEndTime");
+                Object aStartTime = rs.getString("aStartTime");
+                Object aStatus = rs.getString("aStatus");
+                Object cName = rs.getString("cName");
+                Object aReason = rs.getString("aReason");
+
+                Vector<Object> row = new Vector<Object>();
+                row.add(aid);
+                row.add(aPlace);
+                row.add(aContent);
+                row.add(aPNum);
+                row.add(aRigEndTime);
+                row.add(aStartTime);
+                row.add(aStatus);
+                row.add(cName);
+                row.add(aReason);
+                res.addRow(row);
+            }
+
+        }catch (SQLException e){
+            System.out.println("searchClub1: " + e.getMessage());
+        }finally {
+            try{
+                rs.close();
+                ps.close();
+            }catch (SQLException e){
+                System.out.println("searchClub2: " + e.getMessage());
+            }
+            this.closeConnection();
+        }
+        return res;
+    }
+
     public static void main(String[] args){
         SqlKit tmp = new SqlKit();
-        DefaultTableModel tmpmodel = tmp.searchClub();
+        DefaultTableModel tmpmodel = tmp.searchActivity("");
         System.out.println(tmpmodel);
     }
 }

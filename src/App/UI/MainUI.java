@@ -56,7 +56,7 @@ public class MainUI {
     }
     public void init(){
         frame.setTitle("主界面");
-        frame.setBounds(100,100,800,500);
+        frame.setBounds(100,100,1000,800);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         //菜单条
@@ -92,7 +92,6 @@ public class MainUI {
 
 
         frame.add(tabbedPane);
-
         loadSearchTab();
 //        tabbedPane.add("申请审核", verifyPanel);
 //        tabbedPane.add("用户申请",applyPanel);
@@ -110,10 +109,13 @@ public class MainUI {
     private static JPanel searchQueryPanel = new JPanel();//用户查询界面
     private static JPanel searchQueryPanelButton = new JPanel();//用户查询按钮界面
     private static JButton searchClubButton = new JButton();//社团查询按钮
-    private static JButton searchUserButton = new JButton();//用户查询按钮
-    private static JButton searchActivityButton = new JButton();//活动查询按钮
     private static JLabel searchClubLabel = new JLabel();//社团名称
     private static JTextField searchClubText = new JTextField();//社团模糊查询文本框
+    private static JButton searchUserButton = new JButton();//用户查询按钮
+    private static JButton searchActivityButton = new JButton();//活动查询按钮
+    private static JLabel searchActivityLabel = new JLabel();//活动名称
+    private static JTextField searchActivityText = new JTextField();//活动模糊查询文本框
+
     private static JScrollPane searchScrollPane = new JScrollPane();//查询结果显示界面
 
     private static JTable resultTable = new JTable();//显示表格
@@ -121,53 +123,54 @@ public class MainUI {
 
     private static void loadSearchTab(){
         tabbedPane.add("查询信息", searchQueryPanel);
-        /*
-        searchQueryPanel.setLayout(new BorderLayout());
 
-        searchQueryPanel.add(searchQueryPanelButton, BorderLayout.NORTH);
-        //searchQueryPanelButton.setLayout(null);
-        searchQueryPanelButton.setBorder(new EmptyBorder(0,0,0,0));
-
-
-        //resultTable.setRowHeight(30);
-        //searchQueryPanel.add(searchScrollPane);
-
-        searchQueryPanel.add(searchScrollPane, BorderLayout.CENTER);
-
-        //searchQueryPanel.add(searchScrollPane);
-        //searchScrollPane.setBorder(new EmptyBorder(100,0,0,0));
-        */
         searchQueryPanel.setLayout(null);
         //searchQueryPanel.setBounds(0,0,200,100);
         searchQueryPanel.add(searchQueryPanelButton);
         searchQueryPanelButton.setLayout(null);
         searchQueryPanelButton.setBounds(0,0,800,90);
         searchQueryPanel.add(searchScrollPane);
-        searchScrollPane.setBounds(0,100,800,300);
+        searchScrollPane.setBounds(0,100,1000,500);
 
 
+        searchClubLabel.setText("社团名: ");
+        searchQueryPanelButton.add(searchClubLabel);
+        searchClubLabel.setBounds(0,0,50,22);
 
+        searchQueryPanelButton.add(searchClubText);
+        searchClubText.setBounds(55,0,120,22);
 
         searchClubButton.setText("社团查询");
         searchQueryPanelButton.add(searchClubButton);
-        searchClubButton.setBounds(0,0,100,28);
+        searchClubButton.setBounds(0,60,100,28);
         searchClubButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                model1 = new SqlKit().searchClub();
+                model1 = new SqlKit().searchClub(searchClubText.getText());
                 resultTable.setModel(model1);
                 searchScrollPane.add(resultTable);
                 searchScrollPane.setViewportView(resultTable);
             }
         });
 
+
+        searchActivityLabel.setText("活动名: ");
+        searchQueryPanelButton.add(searchActivityLabel);
+        searchActivityLabel.setBounds(0,30,50,22);
+
+        searchQueryPanelButton.add(searchActivityText);
+        searchActivityText.setBounds(55,30,120,22);
+
         searchActivityButton.setText("活动查询");
-        searchActivityButton.setBounds(110,0,100,28);
+        searchActivityButton.setBounds(110,60,100,28);
         searchQueryPanelButton.add(searchActivityButton);
         searchActivityButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                model1 = new SqlKit().searchActivity(searchClubText.getText());
+                resultTable.setModel(model1);
+                searchScrollPane.add(resultTable);
+                searchScrollPane.setViewportView(resultTable);
             }
         });
 
