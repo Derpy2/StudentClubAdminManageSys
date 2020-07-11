@@ -21,30 +21,10 @@ public class MainUI {
     private static JMenuItem menuItem_2 = new JMenuItem();
 
     private static JTabbedPane tabbedPane = new JTabbedPane();
-    private static JPanel userInfoPanel = new JPanel();//用户信息界面
-    private static JLabel userInfoUid = new JLabel();
-    private static JLabel userInfoUidT = new JLabel();
-    private static JLabel userInfoName = new JLabel();
-    private static JTextField userInfoNameT = new JTextField();
-    private static JLabel userInfoSex = new JLabel();
-    private static JPanel userInfoSexPanel = new JPanel();
-    private static ButtonGroup buttonGroup = new ButtonGroup();
-    private static JRadioButton sex1 = new JRadioButton();
-    private static JRadioButton sex2 = new JRadioButton();
-    private static JLabel userInfoUserName = new JLabel();
-    private static JTextField userInfoUserNameT = new JTextField();
-    private static JLabel userInfoEmail = new JLabel();
-    private static JTextField userInfoEmailT = new JTextField();
-    private static JLabel userInfoPhone = new JLabel();
-    private static JTextField userInfoPhoneT = new JTextField();
-    private static JButton modify = new JButton();
+
+    private static JPanel verifyPanel = new JPanel();//用户审核界面
 
 
-
-
-    private JPanel verifyPanel = new JPanel();//用户审核界面
-
-    private JPanel applyPanel = new JPanel();//用户申请界面
 
 
 
@@ -92,9 +72,8 @@ public class MainUI {
 
 
         frame.add(tabbedPane);
-        loadSearchTab();
+
 //        tabbedPane.add("申请审核", verifyPanel);
-//        tabbedPane.add("用户申请",applyPanel);
 
 
     }
@@ -102,24 +81,39 @@ public class MainUI {
     public static void setLoingState(int loingStateate, User tmpuser){
         loingState = loingStateate;
         user = tmpuser;
+        if((user.getUid().charAt(0)) == 'A'){//管理员
+            loingState = 3;
+        }else if(user.getCid() == null){//未加入社团用户
+            loingState = 0;
+        }else if(new SqlKit().isClubLeader(user.getUid())){//社团团长
+            loingState = 2;
+        }else{//普通社团成员
+            loingState = 1;
+        }
         loadUserInfoTab();
-
+        loadSearchTab();
+        loadapplyPanel();
         System.out.println("登陆状态：" + loingState);
     }
+
+    /**
+     * 加载用户查询界面
+     */
     private static JPanel searchQueryPanel = new JPanel();//用户查询界面
     private static JPanel searchQueryPanelButton = new JPanel();//用户查询按钮界面
     private static JButton searchClubButton = new JButton();//社团查询按钮
     private static JLabel searchClubLabel = new JLabel();//社团名称
     private static JTextField searchClubText = new JTextField();//社团模糊查询文本框
     private static JButton searchUserButton = new JButton();//用户查询按钮
+    private static JLabel searchUserLabel = new JLabel();//用户名称
+    private static JTextField searchUserText = new JTextField();//用户模糊查询文本框
     private static JButton searchActivityButton = new JButton();//活动查询按钮
     private static JLabel searchActivityLabel = new JLabel();//活动名称
     private static JTextField searchActivityText = new JTextField();//活动模糊查询文本框
-
     private static JScrollPane searchScrollPane = new JScrollPane();//查询结果显示界面
-
     private static JTable resultTable = new JTable();//显示表格
     private static DefaultTableModel model1 = new DefaultTableModel();
+
 
     private static void loadSearchTab(){
         tabbedPane.add("查询信息", searchQueryPanel);
@@ -167,15 +161,54 @@ public class MainUI {
         searchActivityButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                model1 = new SqlKit().searchActivity(searchClubText.getText());
+                model1 = new SqlKit().searchActivity(searchActivityText.getText());
                 resultTable.setModel(model1);
                 searchScrollPane.add(resultTable);
                 searchScrollPane.setViewportView(resultTable);
             }
         });
 
+        searchUserLabel.setText("用户名: ");
+        searchQueryPanelButton.add(searchUserLabel);
+        searchUserLabel.setBounds(180,0,50,22);
 
+        searchQueryPanelButton.add(searchUserText);
+        searchUserText.setBounds(235,0,120,22);
+
+        searchUserButton.setText("用户查询");
+        searchUserButton.setBounds(220,60,100,28);
+        searchQueryPanelButton.add(searchUserButton);
+        searchUserButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                model1 = new SqlKit().searchUser(searchUserText.getText(), loingState);
+                resultTable.setModel(model1);
+                searchScrollPane.add(resultTable);
+                searchScrollPane.setViewportView(resultTable);
+            }
+        });
     }
+
+    /**
+     * 加载用户信息界面
+     */
+    private static JPanel userInfoPanel = new JPanel();//用户信息界面
+    private static JLabel userInfoUid = new JLabel();
+    private static JLabel userInfoUidT = new JLabel();
+    private static JLabel userInfoName = new JLabel();
+    private static JTextField userInfoNameT = new JTextField();
+    private static JLabel userInfoSex = new JLabel();
+    private static JPanel userInfoSexPanel = new JPanel();
+    private static ButtonGroup buttonGroup = new ButtonGroup();
+    private static JRadioButton sex1 = new JRadioButton();
+    private static JRadioButton sex2 = new JRadioButton();
+    private static JLabel userInfoUserName = new JLabel();
+    private static JTextField userInfoUserNameT = new JTextField();
+    private static JLabel userInfoEmail = new JLabel();
+    private static JTextField userInfoEmailT = new JTextField();
+    private static JLabel userInfoPhone = new JLabel();
+    private static JTextField userInfoPhoneT = new JTextField();
+    private static JButton modify = new JButton();
 
     private static void loadUserInfoTab(){
         tabbedPane.add("用户信息",userInfoPanel);
@@ -213,8 +246,6 @@ public class MainUI {
             sex2.setSelected(true);
         }
 
-
-
         userInfoPanel.add(userInfoUserName);
         userInfoUserName.setText("用户名： ");
         userInfoUserName.setBounds(0,90,60,22);
@@ -250,6 +281,50 @@ public class MainUI {
         userInfoPanel.add(modify);
         modify.setBounds(60, 180,150,22);
     }
+
+    /**
+     * 用户申请界面
+     *
+     */
+    private static JPanel applyPanel = new JPanel();//用户申请界面
+    private static JButton applyJoinClub = new JButton();
+    private static JButton applyEstablishClub = new JButton();
+    public static void loadapplyPanel(){
+
+        tabbedPane.add("用户申请",applyPanel);
+        if(loingState == 0){//未加入社团用户
+            applyPanel.add(applyJoinClub);
+            applyJoinClub.setText("申请加入社团");
+            applyJoinClub.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    JoinClubUI joinClubUI = new JoinClubUI(user);
+                    joinClubUI.setModal(true);
+                    joinClubUI.setLocationRelativeTo(frame);
+                    joinClubUI.setVisible(true);
+                }
+            });
+
+            applyPanel.add(applyEstablishClub);
+            applyEstablishClub.setText("申请建立社团");
+            applyEstablishClub.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    EstablishClubUI establishClubUI = new EstablishClubUI();
+                    establishClubUI.setModal(true);
+                    establishClubUI.setLocationRelativeTo(frame);
+                    establishClubUI.setVisible(true);
+                }
+            });
+        }else if(loingState == 1){
+            //活动报名按钮和列表
+        }else if(loingState == 2){
+            //活动申请按钮
+        }
+
+    }
+
+
 
     public static void main(String[] args){
         try{

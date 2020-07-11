@@ -224,6 +224,12 @@ public class SqlKit extends ConnectDB{
     }
 
 
+    /**
+     * 活动查询
+     * @param aName
+     * @return
+     */
+
     public DefaultTableModel searchActivity(String aName){
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -274,22 +280,140 @@ public class SqlKit extends ConnectDB{
             }
 
         }catch (SQLException e){
-            System.out.println("searchClub1: " + e.getMessage());
+            System.out.println("searchActivity1: " + e.getMessage());
         }finally {
             try{
                 rs.close();
                 ps.close();
             }catch (SQLException e){
-                System.out.println("searchClub2: " + e.getMessage());
+                System.out.println("searchActivity2: " + e.getMessage());
             }
             this.closeConnection();
         }
         return res;
     }
 
+    /**
+     * 用户查询，管理员才可查询密码
+     * @param tmpuName
+     * @param sta
+     * @return
+     */
+
+    public DefaultTableModel searchUser(String tmpuName, int sta){
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String sql = "select uid, uSex, uName, uUserName";
+        String sql2 = ", uPassword ";
+        String sql3 = " from cUser";
+        if(sta == 3){
+            sql += sql2;
+        }
+        sql += sql3;
+
+        if(!tmpuName.equals("")){
+            sql += " where uName like '%" + tmpuName + "%'";
+        }
+        conn = this.getConnection();
+        DefaultTableModel res = null;
+        Object uPassword = null;
+        try{
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            Vector<Object> columns = new Vector<Object>();
+            columns.add("用户编号");
+            columns.add("用户性别");
+            columns.add("用户名称");
+            columns.add("用户用户名");
+            if(sta == 3) {
+                columns.add("用户密码");
+            }
+            res = new DefaultTableModel(columns, 0);
+            while(rs.next()){
+                Object uid = rs.getString("uid");
+                Object uSex = rs.getString("uSex");
+                Object uName = rs.getString("uName");
+                Object uUserName = rs.getString("uUserName");
+                if(sta == 3) {
+                    uPassword = rs.getString("uPassword");
+                }
+
+                Vector<Object> row = new Vector<Object>();
+                row.add(uid);
+                row.add(uSex);
+                row.add(uName);
+                row.add(uUserName);
+                if(sta == 3) {
+                    row.add(uPassword);
+                }
+                res.addRow(row);
+            }
+
+        }catch (SQLException e){
+            System.out.println("searchUser1: " + e.getMessage());
+        }finally {
+            try{
+                rs.close();
+                ps.close();
+            }catch (SQLException e){
+                System.out.println("searchUser2: " + e.getMessage());
+            }
+            this.closeConnection();
+        }
+        return res;
+    }
+
+    public void joinClub(String uid, String cid, String reason){
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String sql = "insert into cClubApplication Values(? ,? , ? , '未审核')";
+
+        conn = this.getConnection();
+
+        try{
+
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, uid);
+            ps.setString(2, cid);
+            ps.setString(3, reason);
+            ps.executeQuery();
+
+
+
+        }catch (SQLException e){
+            System.out.println("joinClub1: " + e.getMessage());
+        }finally {
+            try{
+                //rs.close();
+                ps.close();
+            }catch (SQLException e){
+                System.out.println("joinClub2: " + e.getMessage());
+            }
+            this.closeConnection();
+        }
+    }
+
+
+    /**
+     *
+     *
+     */
+
+    public boolean isClubLeader(String uid){
+        boolean flag = false;
+
+
+        return flag;
+    }
+
+
+
+
     public static void main(String[] args){
         SqlKit tmp = new SqlKit();
-        DefaultTableModel tmpmodel = tmp.searchActivity("");
-        System.out.println(tmpmodel);
+        tmp.joinClub("U000000002","0000000001","无");
+        //DefaultTableModel tmpmodel =
+        //System.out.println(tmpmodel);
     }
 }
