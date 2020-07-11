@@ -1,17 +1,19 @@
 package App.entity;
 
+import java.sql.Date;
+
 public class Club {//社团实例
     private String cid;
     private String cName;
     private String uid;
-    private String cTime;
+    private Date cTime;
     private String cReason;
 
     public Club(){
 
     }
 
-    public Club(String cid, String cName, String uid, String cTime, String cReason) {
+    public Club(String cid, String cName, String uid, Date cTime, String cReason) {
         this.cid = cid;
         this.cName = cName;
         this.uid = uid;
@@ -43,11 +45,11 @@ public class Club {//社团实例
         this.uid = uid;
     }
 
-    public String getcTime() {
+    public Date getcTime() {
         return cTime;
     }
 
-    public void setcTime(String cTime) {
+    public void setcTime(Date cTime) {
         this.cTime = cTime;
     }
 

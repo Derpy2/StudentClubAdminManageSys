@@ -310,7 +310,7 @@ public class MainUI {
             applyEstablishClub.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    EstablishClubUI establishClubUI = new EstablishClubUI();
+                    EstablishClubUI establishClubUI = new EstablishClubUI("U000000001");
                     establishClubUI.setModal(true);
                     establishClubUI.setLocationRelativeTo(frame);
                     establishClubUI.setVisible(true);

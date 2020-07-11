@@ -397,22 +397,109 @@ public class SqlKit extends ConnectDB{
 
     /**
      *
-     *
+     * 判断是否为社团团长
+     * @param uid
      */
 
     public boolean isClubLeader(String uid){
         boolean flag = false;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String sql = "select cid from cClub where uid = ?";
 
+        conn = this.getConnection();
 
+        try{
+
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, uid);
+            rs = ps.executeQuery();
+            if(rs.next()){
+                flag = true;
+            }
+
+        }catch (SQLException e){
+            System.out.println("isClubLeader1: " + e.getMessage());
+        }finally {
+            try{
+                //rs.close();
+                ps.close();
+            }catch (SQLException e){
+                System.out.println("isClubLeader2: " + e.getMessage());
+            }
+            this.closeConnection();
+        }
         return flag;
     }
 
+    /**
+     * 统计社团总数
+     *
+     */
+    public int countClub(){
+        int tot = 0;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String sql = "select COUNT(cid) from cClub";
+
+        conn = this.getConnection();
+
+        try{
+            ps = conn.prepareStatement(sql);
+
+            rs = ps.executeQuery();
+            if(rs.next()){
+                tot = rs.getInt(1);
+            }
+
+        }catch (SQLException e){
+            System.out.println("isClubLeader1: " + e.getMessage());
+        }finally {
+            try{
+                //rs.close();
+                ps.close();
+            }catch (SQLException e){
+                System.out.println("isClubLeader2: " + e.getMessage());
+            }
+            this.closeConnection();
+        }
+        return tot;
+    }
+
+    public void applyClub(Club club){
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String sql = "insert into cClub Values(?, ?, ?, ?, ?, '未审核')";
+
+        conn = this.getConnection();
+
+        try{
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, club.getCid());
+            ps.setString(2,club.getCName());
+            ps.setString(3,club.getUid());
+            ps.setDate(4,club.getcTime());
+            ps.setString(5, club.getcReason());
+            ps.executeQuery();
+
+        }catch (SQLException e){
+            System.out.println("applyClub1: " + e.getMessage());
+        }finally {
+            try{
+                //rs.close();
+                ps.close();
+            }catch (SQLException e){
+                System.out.println("applyClub2: " + e.getMessage());
+            }
+            this.closeConnection();
+        }
+    }
 
 
 
     public static void main(String[] args){
         SqlKit tmp = new SqlKit();
-        tmp.joinClub("U000000002","0000000001","无");
+        tmp.applyClub(new Config().tmpClub);
         //DefaultTableModel tmpmodel =
         //System.out.println(tmpmodel);
     }
